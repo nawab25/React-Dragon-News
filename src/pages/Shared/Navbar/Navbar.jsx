@@ -1,12 +1,23 @@
 import { Link, NavLink } from "react-router-dom";
 import defaultUser from "../../../assets/user.png";
+import { useContext } from "react";
+import { AuthContext } from "../../../ContextProvider/ContextProvider";
 
 const Navbar = () => {
+    const { user, logOut } = useContext(AuthContext);
+
     const links = <>
         <li><NavLink to="/">Home</NavLink></li>
         <li><NavLink to="/about">About</NavLink></li>
         <li><NavLink to="/career">Career</NavLink></li>
     </>
+    const userLogOut = () => {
+        logOut()
+            .then(() => {
+                alert('Are you sure you want to log out?')
+            })
+            .catch(error => console.error(error));
+    }
     return (
         <div className="navbar bg-base-100 py-4 md:py-0">
             <div className="navbar-start">
@@ -26,9 +37,14 @@ const Navbar = () => {
             </div>
             <div className="navbar-end pr-4 lg:pr-0">
                 <img className="w-10 h-auto mr-2" src={defaultUser} alt="" />
-                <Link to="/register">
-                    <button className="bg-[#403f3f] text-white font-semibold px-9 hover:bg-[black] py-2 duration-100">Register</button>
-                </Link>
+                {
+                    user ?
+                        <button onClick={userLogOut} className="bg-[#403f3f] text-white font-semibold px-9 hover:bg-[black] py-2 duration-100">Log out</button>
+                        :
+                        <Link to="/register">
+                            <button className="bg-[#403f3f] text-white font-semibold px-9 hover:bg-[black] py-2 duration-100">Register</button>
+                        </Link>
+                }
             </div>
         </div>
     );
